@@ -18,14 +18,16 @@ class Card: Presenter(){
         with(viewHolder.view as ImageCardView){
             titleText=video.title
             contentText=video.subtitle
-            setMainImageDimensions(300, 150)
+            // Increased dimensions for a more "chido" look
+            setMainImageDimensions(313, 176)
             setBackgroundResource(video.image)
-
+            cardType = ImageCardView.CARD_TYPE_INFO_UNDER_WITH_EXTRA
+            infoVisibility = ImageCardView.CARD_REGION_VISIBLE_ACTIVATED
         }
     }
 
     override fun onUnbindViewHolder(viewHolder: ViewHolder) {
-
+        // Clean up if needed
     }
 
 }

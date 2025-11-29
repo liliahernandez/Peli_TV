@@ -1,20 +1,35 @@
 package com.example.nefis
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.leanback.app.BackgroundManager
 import androidx.leanback.app.BrowseSupportFragment
 import androidx.leanback.widget.ArrayObjectAdapter
 import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnItemViewClickedListener
+import androidx.leanback.widget.OnItemViewSelectedListener
+import androidx.leanback.widget.Presenter
+import androidx.leanback.widget.Row
+import androidx.leanback.widget.RowPresenter
 
 class MainFragment : BrowseSupportFragment() {
+
+    private lateinit var backgroundManager: BackgroundManager
+    private var defaultBackground: Drawable? = null
+    private lateinit var metrics: DisplayMetrics
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         title = "Tokio Hotel Discography"
+
+        prepareBackgroundManager()
+        setupEventListeners()
 
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
 
@@ -76,6 +91,27 @@ class MainFragment : BrowseSupportFragment() {
             }
             startActivity(intent)
         }
+    }
+
+    private fun prepareBackgroundManager() {
+        backgroundManager = BackgroundManager.getInstance(activity)
+        backgroundManager.attach(requireActivity().window)
+        // Ensure you have a default background drawable or remove this line if not needed
+        // defaultBackground = ContextCompat.getDrawable(requireContext(), R.drawable.default_background)
+        metrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(metrics)
+    }
+
+    private fun setupEventListeners() {
+        onItemViewSelectedListener = OnItemViewSelectedListener { itemViewHolder, item, rowViewHolder, row ->
+            if (item is Video) {
+                updateBackground(item.image)
+            }
+        }
+    }
+
+    private fun updateBackground(drawableId: Int) {
+        backgroundManager.drawable = ContextCompat.getDrawable(requireContext(), drawableId)
     }
 
     // --- Función Auxiliar ---
