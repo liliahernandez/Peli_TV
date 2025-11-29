@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Modern Dynamic Palette -->
+    <color name="gradient_start">#240046</color> <!-- Deep Purple -->
+    <color name="gradient_end">#10002B</color>   <!-- Darker Purple -->
+    <color name="accent_color">#E0AAFF</color>   <!-- Soft Lilac -->
+    <color name="secondary_accent">#7B2CBF</color> <!-- Vibrant Purple -->
+    
+    <color name="card_background">#3C096C</color>
+    <color name="card_selected_background">#FFFFFF</color>
+    <color name="search_opaque">#9D4EDD</color>
+    <color name="default_background">#10002B</color>
+</resources>

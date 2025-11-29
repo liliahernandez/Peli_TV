@@ -9,65 +9,96 @@ import androidx.leanback.widget.HeaderItem
 import androidx.leanback.widget.ListRow
 import androidx.leanback.widget.ListRowPresenter
 import androidx.leanback.widget.OnItemViewClickedListener
+import androidx.leanback.widget.OnItemViewSelectedListener
+import androidx.leanback.widget.Presenter
+import androidx.leanback.widget.Row
+import androidx.leanback.widget.RowPresenter
+import androidx.leanback.app.BackgroundManager
+import androidx.core.content.ContextCompat
+import android.util.DisplayMetrics
+import androidx.leanback.widget.BaseGridView
 
 class MainFragment : BrowseSupportFragment() {
 
+    private lateinit var backgroundManager: BackgroundManager
+    private lateinit var metrics: DisplayMetrics
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        title = "Tokio Hotel Discography"
+        
+        prepareBackgroundManager()
+        setupEventListeners()
+        
+        title = "Music Legends TV"
 
-        val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+        val rowsAdapter = ArrayObjectAdapter(CustomListRowPresenter())
 
-        // --- ÁLBUM 1: Schrei (2005) - El debut ---
-        val albumSchrei = listOf(
-            Video("Durch den Monsun", "Schrei", R.mipmap.schrei, "El éxito mundial", R.raw.moonso),
-            Video("Schrei", "Grita", R.mipmap.schrei, "Canción principal", R.raw.schrei),
-            Video("Rette Mich", "Balada", R.mipmap.schrei, "Sálvame", R.raw.rtm),
-            Video("Der letzte Tag", "Rock", R.mipmap.schrei, "El último día", R.raw.dlt),
-            Video("Freunde bleiben", "Amistad", R.mipmap.schrei, "Quedemos como amigos", R.raw.fb)
+        // =================================================================
+        // 1. TOKIO HOTEL (5 Álbumes distintos)
+        // =================================================================
+        val listaTokio = listOf(
+            Video("Monsoon", "Album: Schrei (2005)", R.mipmap.tokio1, "El debut que conquistó el mundo.", R.raw.hotel1),
+            Video("Ready, Set, Go!", "Album: Zimmer 483 (2007)", R.mipmap.tokio2, "La consolidación del rock alemán.", R.raw.hotel2),
+            Video("Automatic", "Album: Humanoid (2009)", R.mipmap.tokio3, "Un giro futurista y electrónico.", R.raw.hotel3),
+            Video("Love Who Loves You Back", "Album: Kings of Suburbia (2014)", R.mipmap.tokio4, "Pop alternativo y maduro.", R.raw.hotel4),
+            Video("Something New", "Album: Dream Machine (2017)", R.mipmap.tokio5, "Sonidos de sintetizador oníricos.", R.raw.hotel5)
         )
-        rowsAdapter.add(crearFila(1, "Álbum: Schrei (2005)", albumSchrei))
+        rowsAdapter.add(crearFila(1, "Tokio Hotel Discografía", listaTokio))
 
-        // --- ÁLBUM 2: Zimmer 483 (2007) ---
-        val albumZimmer = listOf(
-            Video("Übers Ende der Welt", "Ready, Set, Go!", R.mipmap.zimmer483, "Hacia el fin del mundo", R.raw.uedw),
-            Video("Spring nicht", "Don't Jump", R.mipmap.zimmer483, "No saltes", R.raw.sn),
-            Video("An deiner Seite", "By Your Side", R.mipmap.zimmer483, "A tu lado", R.raw.ads),
-            Video("Heilig", "Sacred", R.mipmap.zimmer483, "Sagrado", R.raw.heilig),
-            Video("1000 Meere", "Oceans", R.mipmap.zimmer483, "Mil mares", R.raw.oc)
+
+        // =================================================================
+        // 2. MICHAEL JACKSON (5 Eras Legendarias)
+        // =================================================================
+        val listaMJ = listOf(
+            Video("Don't Stop 'Til You Get Enough", "Album: Off the Wall (1979)", R.mipmap.michael1, "El inicio de la leyenda en solitario.", R.raw.jackson1),
+            Video("Billie Jean", "Album: Thriller (1982)", R.mipmap.michael2, "El álbum más vendido de la historia.", R.raw.jackson2),
+            Video("Smooth Criminal", "Album: Bad (1987)", R.mipmap.michael3, "El paso antigravedad.", R.raw.jackson3),
+            Video("Black or White", "Album: Dangerous (1991)", R.mipmap.michael4, "Rompiendo barreras raciales.", R.raw.jackson4),
+            Video("You Rock My World", "Album: Invincible (2001)", R.mipmap.michael5, "Su último álbum de estudio.", R.raw.jackson5)
         )
-        rowsAdapter.add(crearFila(2, "Álbum: Zimmer 483 (2007)", albumZimmer))
+        rowsAdapter.add(crearFila(2, "Michael Jackson Hits", listaMJ))
 
-        // --- ÁLBUM 3: Humanoid (2009) - Era Sci-Fi ---
-        val albumHumanoid = listOf(
-            Video("Automatic", "Auto", R.mipmap.humanoid, "Sonido robótico", R.raw.auto),
-            Video("World Behind My Wall", "Mundo", R.mipmap.humanoid, "Detrás de mi pared", R.raw.wbmw),
-            Video("Darkside of the Sun", "Live", R.mipmap.humanoid, "Lado oscuro del sol", R.raw.dots),
-            Video("Noise", "Ruido", R.mipmap.humanoid, "Grita fuerte", R.raw.noise),
-            Video("Alien", "Espacio", R.mipmap.humanoid, "Sentirse extraño", R.raw.alien)
+
+        // =================================================================
+        // 3. LANA DEL REY (5 Álbumes Melancólicos)
+        // =================================================================
+        val listaLana = listOf(
+            Video("Video Games", "Album: Born to Die (2012)", R.mipmap.lana1, "El nacimiento del indie pop vintage.", R.raw.rey1),
+            Video("Ride", "Album: Paradise (2012)", R.mipmap.lana2, "Libertad en la carretera.", R.raw.rey2),
+            Video("West Coast", "Album: Ultraviolence (2014)", R.mipmap.lana3, "Guitarras psicodélicas y oscuras.", R.raw.rey3),
+            Video("High by the Beach", "Album: Honeymoon (2015)", R.mipmap.lana4, "Trap suave y brisa marina.", R.raw.rey4),
+            Video("Love", "Album: Lust for Life (2017)", R.mipmap.lana5, "Una oda a la juventud y el amor.", R.raw.rey5)
         )
-        rowsAdapter.add(crearFila(3, "Álbum: Humanoid (2009)", albumHumanoid))
+        rowsAdapter.add(crearFila(3, "Lana del Rey Vibes", listaLana))
 
-        // --- ÁLBUM 4: Kings of Suburbia (2014) - Cambio a Pop/Elec ---
-        val albumKings = listOf(
-            Video("Love Who Loves You Back", "Love", R.mipmap.kos, "Ama a quien te ama", R.raw.lwlyb),
-            Video("Girl Got a Gun", "Bang", R.mipmap.kos, "Video polémico", R.raw.ggag),
-            Video("Run, Run, Run", "Balada", R.mipmap.kos, "Corre, corre", R.raw.run),
-            Video("Stormy Weather", "Clima", R.mipmap.kos, "Tormenta", R.raw.sw),
-            Video("The Heart Get No Sleep", "Fiesta", R.mipmap.kos, "Sin dormir", R.raw.thgns)
+
+        // =================================================================
+        // 4. AVICII (5 Grandes Éxitos/Álbumes)
+        // =================================================================
+        val listaAvicii = listOf(
+            Video("Levels", "Single Debut (2011)", R.mipmap.avicii1, "El track que cambió el EDM para siempre.", R.raw.avicii1),
+            Video("Wake Me Up", "Album: True (2013)", R.mipmap.avicii2, "House mezclado con Country.", R.raw.avicii2),
+            Video("The Nights", "EP: The Days / Nights (2014)", R.mipmap.avicii3, "Vive una vida que recordarás.", R.raw.avicii3),
+            Video("Waiting For Love", "Album: Stories (2015)", R.mipmap.avicii4, "Narrativa visual y sonora.", R.raw.avicii4),
+            Video("SOS", "Album: Tim (2019)", R.mipmap.avicii5, "Álbum póstumo lleno de emoción.", R.raw.avicci5)
         )
-        rowsAdapter.add(crearFila(4, "Álbum: Kings of Suburbia (2014)", albumKings))
+        rowsAdapter.add(crearFila(4, "Avicii Legacy", listaAvicii))
 
-        // --- ÁLBUM 5: Dream Machine (2017) ---
-        val albumDream = listOf(
-            Video("Something New", "Intro", R.mipmap.dm, "Algo nuevo", R.raw.son),
-            Video("What If", "Duda", R.mipmap.dm, "Y si...", R.raw.wi),
-            Video("Boy Don't Cry", "Dance", R.mipmap.dm, "Los chicos no lloran", R.raw.bdc),
-            Video("Easy", "Chill", R.mipmap.dm, "Fácil", R.raw.easy),
-            Video("Elysa", "Triste", R.mipmap.dm, "Canción emotiva", R.raw.elysa)
+
+        // =================================================================
+        // 5. ARIANA GRANDE (5 Eras Pop)
+        // =================================================================
+        val listaAriana = listOf(
+            Video("The Way", "Album: Yours Truly (2013)", R.mipmap.ariana1, "R&B dulce de los 90s.", R.raw.grande1),
+            Video("Break Free", "Album: My Everything (2014)", R.mipmap.ariana2, "Explosión pop galáctica.", R.raw.grande2),
+            Video("Side to Side", "Album: Dangerous Woman (2016)", R.mipmap.ariana3, "Una Ariana más atrevida.", R.raw.grande3),
+            Video("No Tears Left to Cry", "Album: Sweetener (2018)", R.mipmap.ariana4, "Sanando a través de la música.", R.raw.grande4),
+            Video("Thank U, Next", "Album: Thank U, Next (2019)", R.mipmap.ariana5, "El himno de la superación personal.", R.raw.grande5)
         )
-        rowsAdapter.add(crearFila(5, "Álbum: Dream Machine (2017)", albumDream))
+        rowsAdapter.add(crearFila(5, "Ariana Grande Pop", listaAriana))
 
+
+        // Configuración final
         adapter = rowsAdapter
 
         onItemViewClickedListener = OnItemViewClickedListener { _, video, _, _ ->
@@ -76,6 +107,25 @@ class MainFragment : BrowseSupportFragment() {
             }
             startActivity(intent)
         }
+    }
+
+    private fun prepareBackgroundManager() {
+        backgroundManager = BackgroundManager.getInstance(requireActivity())
+        backgroundManager.attach(requireActivity().window)
+        metrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(metrics)
+    }
+
+    private fun setupEventListeners() {
+        onItemViewSelectedListener = OnItemViewSelectedListener { itemViewHolder, item, rowViewHolder, row ->
+            if (item is Video) {
+                updateBackground(item.image)
+            }
+        }
+    }
+
+    private fun updateBackground(drawableId: Int) {
+        backgroundManager.drawable = ContextCompat.getDrawable(requireContext(), drawableId)
     }
 
     // --- Función Auxiliar ---
@@ -87,4 +137,17 @@ class MainFragment : BrowseSupportFragment() {
         val header = HeaderItem(id, titulo)
         return ListRow(header, listRowAdapter)
     }
-}
+    }
+
+    // --- Custom Presenter for Centering ---
+    class CustomListRowPresenter : ListRowPresenter() {
+        override fun onBindRowViewHolder(holder: RowPresenter.ViewHolder, item: Any) {
+            super.onBindRowViewHolder(holder, item)
+            val vh = holder as ListRowPresenter.ViewHolder
+            val gridView = vh.gridView
+            gridView.windowAlignment = BaseGridView.WINDOW_ALIGN_NO_EDGE
+            gridView.windowAlignmentOffsetPercent = 50f
+            gridView.itemAlignmentOffsetPercent = 50f
+        }
+    }
+
